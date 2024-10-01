@@ -1,6 +1,96 @@
-.App{
-  height: 100vh;
-  width: 100%;
-  background-color: blueviolet;
+@font-face {
+  font-family: "Cactus";   /*Can be any text*/
+  src: local("Cactus Bold"),
+    url("/src/fonts/Cactus Bold.ttf") format("truetype");
+}
 
+body{
+  background-color: #F3EFEC;
+
+}
+
+.App{
+  height: 96vh;
+  width: 100%;
+}
+
+.big-frame{
+  border: 1px solid black;
+  height: 95vh;
+  width: 97.5%;
+  margin: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.text{
+  height: 95vh;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px; ;
+  position: relative;
+  font-family: "Cactus";
+}
+
+.title{
+  justify-content: center;
+  width: 100%;
+  margin-top: 2em;
+  margin-left: 3em;
+}
+
+#mediazine{
+  font-size: 4.5vw;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+#author{
+  margin-top: 0;
+  font-size: 2.5vh;
+}
+
+#author a{
+  text-decoration: none;
+  color: black;
+}
+
+#author a:hover{
+  opacity: 0.6;
+}
+
+.katatext{
+  margin-top: 3em;
+  display: flex;
+  flex-direction: row;
+}
+
+.katatext .katazine{
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  font-size: 3em;
+  margin: 0;
+}
+
+.katatext .katazine#katauthor{
+  color: #E3211B;
+}
+
+.info{
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
+  bottom: 0 ;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+.poster{
+  background-image: url("/src/assets/poster.png");
+  background-size: cover;
+  height: 95%;
+  width: 50vw;
 }
