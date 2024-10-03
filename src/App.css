@@ -4,6 +4,12 @@
     url("/src/fonts/Cactus Bold.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Alte-Hass";   /*Can be any text*/
+  src: local("Alte"),
+    url("/src/fonts/alte-haas-grotesk.regular.ttf") format("truetype");
+}
+
 body{
   background-color: #F3EFEC;
 
@@ -36,12 +42,12 @@ body{
 .title{
   justify-content: center;
   width: 100%;
-  margin-top: 2em;
-  margin-left: 3em;
+  margin-top: 1em;
+  margin-left: 1em;
 }
 
 #mediazine{
-  font-size: 4.5vw;
+  font-size: 5vw;
   padding-bottom: 0;
   margin-bottom: 0;
 }
@@ -62,8 +68,10 @@ body{
 
 .katatext{
   margin-top: 3em;
+  margin-left: 1em;
   display: flex;
   flex-direction: row;
+  font-family: "Alte-Hass";
 }
 
 .katatext .katazine{
@@ -81,16 +89,30 @@ body{
   position: absolute;
   display: flex;
   flex-direction: row;
-  width: 100%;
-  justify-content: space-evenly;
+  width:90%;
+  justify-content: space-around;
   bottom: 0 ;
   margin-bottom: 20px;
   font-size: 1.5em;
+  padding-right: 1.5em;
+  font-family: 'alte-haas';
 }
 
-.poster{
+.poster-container {
+  width: 100%; /* Full width of the parent */
+  max-width: 50vw; /* Set a max width for larger screens, adjust as needed */
+  margin: auto; /* Center the container */
+  position: relative; /* Position for absolute child */
+  overflow: hidden; /* Prevent overflow */
+}
+
+.poster {
   background-image: url("/src/assets/poster.png");
-  background-size: cover;
-  height: 95%;
-  width: 50vw;
+  background-size: cover; /* Ensures the background image covers the entire area */
+  width: 66.67%; /* Use 66.67% for a width that maintains the aspect ratio */
+  height: auto; /* Automatically calculate height based on width */
+  max-height: 80vh; /* Optional: Limit height to 80% of the viewport height */
+  aspect-ratio: 2 / 3; /* Maintains the 2:3 aspect ratio */
+  background-position: center; /* Center the image */
+  border: 1px solid #ccc; /* Optional for visual reference */
 }
