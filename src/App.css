@@ -104,6 +104,8 @@ body{
   margin: auto; /* Center the container */
   position: relative; /* Position for absolute child */
   overflow: hidden; /* Prevent overflow */
+  display: flex;
+  flex-direction: column;
 }
 
 .poster {
@@ -116,3 +118,20 @@ body{
   background-position: center; /* Center the image */
   border: 1px solid #ccc; /* Optional for visual reference */
 }
+
+.screenshot-button {
+  background-color: #F3EFEC; /* Match your theme */
+  border: none;
+  padding: 10px 20px;
+  width: 66.67%;
+  cursor: pointer;
+  border-radius: 5px; /* Optional: add rounded corners */
+  font-size: 16px; /* Font size */
+  margin-top: 20px; /* Space above the button */
+  transition: background-color 0.3s ease; /* Transition effect */
+}
+
+.screenshot-button:hover {
+  background-color: #d0c7c1; /* Darker shade on hover */
+}
+
