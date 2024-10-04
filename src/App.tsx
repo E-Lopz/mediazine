@@ -1,26 +1,45 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import PopButton from './components/PopButton';
 import html2canvas from 'html2canvas';
 import ImgUploader from './components/ImgUploader';
+import { Canvas } from 'fabric'; // Import the Canvas class directly
 import defaultImg from './assets/poster.png'; // Import the default image
 
 function App() {
-  const posterRef = useRef<HTMLDivElement>(null); // Create a ref for the poster
-  const [posterImg, setPosterImg] = useState<string>(defaultImg); // Set default image initially
+  const posterRef = useRef<HTMLCanvasElement>(null);
+  const [posterImg, setPosterImg] = useState<string>(defaultImg);
+  const [canvas, setCanvas] = useState<Canvas | undefined>(); // Keep the type as Canvas
+
+  useEffect(() => {
+    if (posterRef.current) {
+      const initCanvas = new Canvas(posterRef.current, {
+        width: 500,
+        height: 500,
+      });
+
+      initCanvas.renderAll();
+      setCanvas(initCanvas);
+
+      return () => {
+        initCanvas.dispose();
+      };
+    }
+  }, []);
+
+
 
   const handleScreenshot = () => {
-    if (posterRef.current) { // Check if the ref is not null
+    if (posterRef.current) {
       html2canvas(posterRef.current).then((canvas) => {
         const link = document.createElement('a');
-        link.href = canvas.toDataURL(); // Convert canvas to data URL
-        link.download = 'poster.png'; // Set the download file name
-        link.click(); // Trigger the download
+        link.href = canvas.toDataURL();
+        link.download = 'poster.png';
+        link.click();
       });
     }
   };
 
-  // Callback function to update the poster image
   const updatePosterImage = (imageUrl: string) => {
     setPosterImg(imageUrl);
   };
@@ -56,15 +75,9 @@ function App() {
           </div>
         </div>
         <div className="poster-container">
-          <div 
-            className="poster" 
-            ref={posterRef} 
-            style={{ backgroundImage: `url(${posterImg})`, backgroundSize: 'cover' }} // Set the background image here
-          >
-            {/* The poster image is dynamically updated here */}
-          </div>
-          <button className="screenshot-button" onClick={handleScreenshot}>Take Screenshot</button> {/* Button to take screenshot */}
-          <ImgUploader onImageUpload={updatePosterImage} /> {/* Pass the callback to ImgUploader */}
+          <canvas className="poster" ref={posterRef} style={{ backgroundImage: `url(${posterImg})`, backgroundSize: 'cover' }} />
+          <button className="screenshot-button" onClick={handleScreenshot}>Take Screenshot</button>
+          <ImgUploader onImageUpload={updatePosterImage} />
         </div>
       </div>
     </div>
