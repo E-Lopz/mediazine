@@ -1,10 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './App.css';
 import PopButton from './components/PopButton';
 import html2canvas from 'html2canvas';
+import ImgUploader from './components/ImgUploader';
 
 function App() {
   const posterRef = useRef<HTMLDivElement>(null); // Create a ref for the poster
+  const [posterImg, setPosterImg] = useState<string>(''); // State to hold the uploaded image URL
 
   const handleScreenshot = () => {
     if (posterRef.current) { // Check if the ref is not null
@@ -16,6 +18,11 @@ function App() {
         link.click(); // Trigger the download
       });
     }
+  };
+
+  // Callback function to update the poster image
+  const updatePosterImage = (imageUrl: string) => {
+    setPosterImg(imageUrl);
   };
 
   return (
@@ -49,8 +56,14 @@ function App() {
           </div>
         </div>
         <div className="poster-container">
-          <div className="poster" ref={posterRef}></div> {/* Attach the ref here */}
-          <button className='screenshot-button' onClick={handleScreenshot}>Take Screenshot</button> {/* Button to take screenshot */}
+          <div 
+            className="poster" 
+            ref={posterRef} 
+            style={{ backgroundImage: `url(${posterImg || '/src/assets/poster.png'})`, backgroundSize: 'cover' }}
+          >
+          </div>
+          <button className="screenshot-button" onClick={handleScreenshot}>Take Screenshot</button> {/* Button to take screenshot */}
+          <ImgUploader onImageUpload={updatePosterImage} /> {/* Pass the callback to ImgUploader */}
         </div>
       </div>
     </div>
