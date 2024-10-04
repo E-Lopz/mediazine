@@ -3,15 +3,15 @@ import './App.css';
 import PopButton from './components/PopButton';
 import html2canvas from 'html2canvas';
 import ImgUploader from './components/ImgUploader';
+import defaultImg from './assets/poster.png'; // Import the default image
 
 function App() {
   const posterRef = useRef<HTMLDivElement>(null); // Create a ref for the poster
-  const [posterImg, setPosterImg] = useState<string>(''); // State to hold the uploaded image URL
+  const [posterImg, setPosterImg] = useState<string>(defaultImg); // Set default image initially
 
   const handleScreenshot = () => {
     if (posterRef.current) { // Check if the ref is not null
       html2canvas(posterRef.current).then((canvas) => {
-        // Handle the canvas here (e.g., convert to image or download)
         const link = document.createElement('a');
         link.href = canvas.toDataURL(); // Convert canvas to data URL
         link.download = 'poster.png'; // Set the download file name
@@ -59,8 +59,9 @@ function App() {
           <div 
             className="poster" 
             ref={posterRef} 
-            style={{ backgroundImage: `url(${posterImg || '/src/assets/poster.png'})`, backgroundSize: 'cover' }}
+            style={{ backgroundImage: `url(${posterImg})`, backgroundSize: 'cover' }} // Set the background image here
           >
+            {/* The poster image is dynamically updated here */}
           </div>
           <button className="screenshot-button" onClick={handleScreenshot}>Take Screenshot</button> {/* Button to take screenshot */}
           <ImgUploader onImageUpload={updatePosterImage} /> {/* Pass the callback to ImgUploader */}
