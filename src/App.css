@@ -109,7 +109,6 @@ body{
 }
 
 .poster {
-  background-image: url("/src/assets/poster.png");
   background-size: cover; /* Ensures the background image covers the entire area */
   width: 66.67%; /* Use 66.67% for a width that maintains the aspect ratio */
   height: auto; /* Automatically calculate height based on width */
