@@ -5,6 +5,8 @@ import html2canvas from 'html2canvas';
 import ImgUploader from './components/ImgUploader';
 import * as fabric from 'fabric';
 import defaultImg from './assets/poster.png'; // Import the default image
+import CanvasSettings from './components/CanvasSettings';
+import ElementAdder from './components/ElementAdder';
 
 function App() {
   const posterRef = useRef<HTMLCanvasElement>(null);
@@ -26,8 +28,8 @@ function App() {
         const fabricImage = new fabric.Image(img);
 
       // Get canvas dimensions
-      const canvasWidth = initCanvas.width || 500;
-      const canvasHeight = initCanvas.height || 500;
+      const canvasWidth = initCanvas.width || 400;
+      const canvasHeight = initCanvas.height || 550;
 
       // Calculate scaling ratio using Math.max to cover the whole canvas
       const scaleFactor = Math.max(canvasWidth / fabricImage.width!, canvasHeight / fabricImage.height!);
@@ -90,8 +92,8 @@ function App() {
         const fabricImage = new fabric.Image(img);
   
         // Get canvas dimensions
-        const canvasWidth = canvas.width || 500;
-        const canvasHeight = canvas.height || 500;
+        const canvasWidth = canvas.width || 400;
+        const canvasHeight = canvas.height || 550;
   
         // Calculate scaling ratio to cover the entire canvas
         const scaleFactor = Math.max(canvasWidth / fabricImage.width!, canvasHeight / fabricImage.height!);
@@ -168,6 +170,10 @@ function App() {
             Take Screenshot
           </button>
           <ImgUploader onImageUpload={updatePosterImage} />
+        </div>
+        <div className="settings">
+          {canvas && <CanvasSettings canvas={canvas} />} {/* Render only if canvas is defined */}
+          {canvas && <ElementAdder canvas={canvas} />}
         </div>
       </div>
     </div>

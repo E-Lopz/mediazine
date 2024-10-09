@@ -10,17 +10,16 @@
     url("/src/fonts/alte-haas-grotesk.regular.ttf") format("truetype");
 }
 
-body{
+body {
   background-color: #F3EFEC;
-
 }
 
-.App{
+.App {
   height: 96vh;
   width: 100%;
 }
 
-.big-frame{
+.big-frame {
   border: 1px solid black;
   height: 95vh;
   width: 97.5%;
@@ -29,44 +28,44 @@ body{
   flex-direction: row;
 }
 
-.text{
+.text {
   height: 95vh;
   width: 20vw;
   display: flex;
   flex-direction: column;
-  padding-left: 20px; ;
+  padding-left: 20px;
   position: relative;
   font-family: "Cactus";
 }
 
-.title{
+.title {
   justify-content: center;
   width: 100%;
   margin-top: 1em;
   margin-left: 1em;
 }
 
-#mediazine{
+#mediazine {
   font-size: 5vw;
   padding-bottom: 0;
   margin-bottom: 0;
 }
 
-#author{
+#author {
   margin-top: 0;
   font-size: 2.5vh;
 }
 
-#author a{
+#author a {
   text-decoration: none;
   color: black;
 }
 
-#author a:hover{
+#author a:hover {
   opacity: 0.6;
 }
 
-.katatext{
+.katatext {
   margin-top: 3em;
   margin-left: 1em;
   display: flex;
@@ -74,24 +73,24 @@ body{
   font-family: "Alte-Hass";
 }
 
-.katatext .katazine{
+.katatext .katazine {
   writing-mode: vertical-lr;
   text-orientation: upright;
   font-size: 3em;
   margin: 0;
 }
 
-.katatext .katazine#katauthor{
+.katatext .katazine#katauthor {
   color: #E3211B;
 }
 
-.info{
+.info {
   position: absolute;
   display: flex;
   flex-direction: row;
-  width:90%;
+  width: 90%;
   justify-content: space-around;
-  bottom: 0 ;
+  bottom: 0;
   margin-bottom: 20px;
   font-size: 1.5em;
   padding-right: 1.5em;
@@ -106,16 +105,17 @@ body{
   overflow: hidden; /* Prevent overflow */
   display: flex;
   flex-direction: column;
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
 }
 
 .poster {
-  background-size: cover; /* Ensures the background image covers the entire area */
-  width: 66.67%; /* Use 66.67% for a width that maintains the aspect ratio */
-  height: auto; /* Automatically calculate height based on width */
   max-height: 80vh; /* Optional: Limit height to 80% of the viewport height */
-  aspect-ratio: 2 / 3; /* Maintains the 2:3 aspect ratio */
   background-position: center; /* Center the image */
   border: 1px solid #ccc; /* Optional for visual reference */
+  display: flex; /* Enable flexbox */
+  justify-content: center; /* Center child elements horizontally */
+  align-items: center; /* Center child elements vertically */
 }
 
 .screenshot-button {
@@ -134,3 +134,7 @@ body{
   background-color: #d0c7c1; /* Darker shade on hover */
 }
 
+.settings{
+  display: flex;
+  flex-direction: column;
+}
