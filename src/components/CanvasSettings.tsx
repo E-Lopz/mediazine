@@ -1,21 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import fabric from 'fabric';
+import React, { useState, useEffect, useRef } from 'react';
+import * as fabric from 'fabric';
+import defaultImg from './assets/poster.png'; // Import the default image
+
 
 interface CanvasProps {
   canvas: fabric.Canvas; // Explicitly type the canvas prop
+  backgroundImageRef: React.RefObject<fabric.Image | null>;
 }
 
-const CanvasSettings: React.FC<CanvasProps> = ({ canvas }) => {
+const CanvasSettings: React.FC<CanvasProps> = ({ canvas, backgroundImageRef }) => {
   const [canvasHeight, setCanvasHeight] = useState<number>(550);
   const [canvasWidth, setCanvasWidth] = useState<number>(550);
   const maxWidth = window.innerWidth * 0.5; // 50% of viewport width
   const maxHeight = window.innerHeight * 0.8; // 80% of viewport height
 
+  // Function to set the background image
+  const setBackgroundImage = (imgSrc: string) => {
+    const img = new Image();
+    img.onload = () => {
+      const fabricImage = new fabric.Image(img);
+
+      // Calculate scaling ratio to cover the entire canvas
+      const scaleFactor = Math.max(canvasWidth / fabricImage.width!, canvasHeight / fabricImage.height!);
+
+      // Scale the image to cover the canvas
+      fabricImage.scale(scaleFactor);
+
+      // Set the image position to cover the whole canvas from top-left
+      fabricImage.set({
+        originX: 'left',
+        originY: 'top',
+        left: 0,
+        top: 0,
+      });
+
+      // Set the background image
+      canvas.set("backgroundImage", fabricImage);
+
+      // Render the canvas after setting the background
+      canvas.renderAll();
+    };
+    img.src = imgSrc; // Start loading the image
+  };
+
   useEffect(() => {
     if (canvas) {
       canvas.setWidth(canvasWidth);
       canvas.setHeight(canvasHeight);
-      canvas.renderAll();
     }
   }, [canvasHeight, canvasWidth, canvas]);
 
@@ -68,6 +99,20 @@ const CanvasSettings: React.FC<CanvasProps> = ({ canvas }) => {
     } else {
       setCanvasWidth(maxWidth);
       setCanvasHeight(Math.min((maxWidth * 3) / 4, maxHeight)); // Use 4:3 ratio if max width is hit and ensure height does not exceed max height
+    }
+
+    // Resize the background image to fit the new canvas size
+    if (backgroundImageRef.current) {
+      console.log('test')
+      const scaleFactor = Math.max(canvasWidth / backgroundImageRef.current.width!, canvasHeight / backgroundImageRef.current.height!);
+      backgroundImageRef.current.scale(scaleFactor);
+      backgroundImageRef.current.set({
+        left: 0,
+        top: 0,
+      });
+
+      // Re-render the canvas
+      canvas.renderAll();
     }
   };
 

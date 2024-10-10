@@ -12,6 +12,8 @@ function App() {
   const posterRef = useRef<HTMLCanvasElement>(null);
   const [posterImg, setPosterImg] = useState<string>(defaultImg);
   const [canvas, setCanvas] = useState<fabric.Canvas | undefined>(); // Keep the type as Canvas
+  const backgroundImageRef = useRef<fabric.Image | null>(null); // Ref to store the background image
+
 
   useEffect(() => {
     if (posterRef.current) {
@@ -47,6 +49,8 @@ function App() {
 
       // Set the scaled image as the background
       initCanvas.set("backgroundImage", fabricImage);
+
+      backgroundImageRef.current = fabricImage;
       
       // Render the canvas after setting the background
       initCanvas.renderAll();
@@ -76,18 +80,10 @@ function App() {
     setPosterImg(imageUrl);
   
     if (canvas) {
-      const rect = new fabric.Rect({
-        top:100,
-        left:50,
-        width:100,
-        height:60,
-        fill:"#D84D42"
-      })
       const img = new Image();
       img.crossOrigin = 'anonymous'; // Allow cross-origin images to be used
       img.src = imageUrl;
   
-      console.log(imageUrl); // Image URL is correct
       img.onload = () => {
         const fabricImage = new fabric.Image(img);
   
@@ -110,10 +106,9 @@ function App() {
         });
   
         // Set the background image
-        canvas.set("backgroundImage", fabricImage);
-        canvas.add(rect )
-  
+        canvas.set("backgroundImage", fabricImage);  
         // Render the canvas after setting the background
+        backgroundImageRef.current = fabricImage;
         canvas.renderAll();
   
         console.log('Image loaded and set as background successfully');
@@ -172,7 +167,7 @@ function App() {
           <ImgUploader onImageUpload={updatePosterImage} />
         </div>
         <div className="settings">
-          {canvas && <CanvasSettings canvas={canvas} />} {/* Render only if canvas is defined */}
+          {canvas && <CanvasSettings canvas={canvas} backgroundImageRef={backgroundImageRef} />} {/* Render only if canvas is defined */}
           {canvas && <ElementAdder canvas={canvas} />}
         </div>
       </div>

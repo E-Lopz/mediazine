@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as fabric from 'fabric';
 
 interface CanvasProps {
@@ -7,9 +7,67 @@ interface CanvasProps {
 
 const ElementAdder: React.FC<CanvasProps> = ({ canvas }) => {
   const [textInput, setTextInput] = useState<string>('');
-  const [lineColor, setLineColor] = useState<string>('black');
   const [circleColor, setCircleColor] = useState<string>('black');
   const [rectangleColor, setRectangleColor] = useState<string>('black');
+  const [selectedObject, setSelectedObject] = useState<fabric.Object | null>(null);
+  const [fontFamily, setFontFamily] = useState<string>('Arial');
+
+  useEffect(() => {
+    // Update the selected object and its color when the selection changes
+    const handleObjectSelected = (e: fabric.Object) => {
+      if (!e) return;
+  
+      const obj = e as fabric.Object;
+      setSelectedObject(obj);
+  
+      // Update color previews based on the type of selected object
+      if (obj.type === 'circle') {
+        setCircleColor(obj.fill as string);
+        setRectangleColor('black'); // Reset rectangle color or keep it the same
+      } else if (obj.type === 'rect') {
+        setRectangleColor(obj.fill as string);
+        setCircleColor('black'); // Reset circle color or keep it the same
+      } else if (obj.type === 'textbox') {
+        // Optionally handle textbox color preview if needed
+        setCircleColor('black'); 
+        setRectangleColor('black');
+      }
+    };
+  
+    // Update the selected object when an object is deselected
+    const handleObjectDeselected = () => {
+      setSelectedObject(null);
+      setCircleColor('black'); // Reset to default or keep previous values
+      setRectangleColor('black'); // Reset to default or keep previous values
+    };
+  
+    // Attach event listeners
+    canvas.on('selection:created', (event) => {
+      handleObjectSelected(event.selected[0]);
+    });
+  
+    canvas.on('selection:updated', (event) => {
+      handleObjectSelected(event.selected[0]);
+    });
+    
+    canvas.on('selection:cleared', handleObjectDeselected);
+  
+    // Handle keydown events for deleting selected objects
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (selectedObject && (event.key === 'Delete')) {
+        removeSelectedObject();
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      canvas.off('selection:created', handleObjectSelected);
+      canvas.off('selection:updated', handleObjectSelected);
+      canvas.off('selection:cleared', handleObjectDeselected);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [canvas, selectedObject]);
 
   const addText = () => {
     const text = new fabric.Textbox(textInput, {
@@ -21,16 +79,6 @@ const ElementAdder: React.FC<CanvasProps> = ({ canvas }) => {
       editable: true,
     });
     canvas.add(text);
-    canvas.renderAll();
-  };
-
-  const addLine = () => {
-    const line = new fabric.Line([50, 100, 200, 200], {
-      stroke: lineColor,
-      strokeWidth: 5,
-      selectable: true,
-    });
-    canvas.add(line);
     canvas.renderAll();
   };
 
@@ -59,11 +107,33 @@ const ElementAdder: React.FC<CanvasProps> = ({ canvas }) => {
     canvas.renderAll();
   };
 
+  const changeSelectedColor = (color: string) => {
+    if (selectedObject) {
+      selectedObject.set('fill', color);
+      canvas.renderAll();
+    }
+  };
+
+  const changeFont = (font: string) => {
+    if (selectedObject && selectedObject.type === 'textbox') {
+      selectedObject.set('fontFamily', font);
+      canvas.renderAll();
+    }
+  };
+
+  const removeSelectedObject = () => {
+    if (selectedObject) {
+      canvas.remove(selectedObject);
+      setSelectedObject(null); // Clear the selection
+      canvas.renderAll();
+    }
+  };
+
   return (
     <div>
       <h3>Add Elements to Canvas</h3>
 
-      {/* Text Input */}
+      {/* Text Input for Textbox */}
       <div>
         <label>
           Text:
@@ -74,19 +144,6 @@ const ElementAdder: React.FC<CanvasProps> = ({ canvas }) => {
           />
         </label>
         <button onClick={addText}>Add Text</button>
-      </div>
-
-      {/* Line Color Input */}
-      <div>
-        <label>
-          Line Color:
-          <input
-            type="color"
-            value={lineColor}
-            onChange={(e) => setLineColor(e.target.value)}
-          />
-        </label>
-        <button onClick={addLine}>Add Line</button>
       </div>
 
       {/* Circle Color Input */}
@@ -114,6 +171,48 @@ const ElementAdder: React.FC<CanvasProps> = ({ canvas }) => {
         </label>
         <button onClick={addRectangle}>Add Rectangle</button>
       </div>
+
+      {/* Selected Object Menu */}
+      {selectedObject && (
+        <div>
+          <h4>Selected Object Settings</h4>
+
+          {/* Change Color */}
+          <div>
+            <label>
+              Change Color:
+              <input
+                type="color"
+                onChange={(e) => changeSelectedColor(e.target.value)}
+              />
+            </label>
+          </div>
+
+          {/* Change Font */}
+          {selectedObject.type === 'textbox' && (
+            <div>
+              <label>
+                Font Family:
+                <select
+                  value={fontFamily}
+                  onChange={(e) => {
+                    setFontFamily(e.target.value);
+                    changeFont(e.target.value);
+                  }}
+                >
+                  <option value="Arial">Arial</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+              </label>
+            </div>
+          )}
+          {/* Remove Button */}
+          <button onClick={removeSelectedObject}>Remove Selected</button>
+        </div>
+      )}
     </div>
   );
 };
